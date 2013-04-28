@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Samples</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="main_list_title">List title</string>
+    <string name="main_list_empty">Empty list.</string>
+    <string name="content_title">Content pane</string>
+
+</resources>
