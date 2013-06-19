@@ -2,16 +2,27 @@ SplitActivity
 =============
 
 Activity master+content pattern library.
+
+
+Behavior
+--------
+
 * On phones: only one pane (either master or content)
 * On 7", portrait: same as phones
 * On 7", landscape: same as tablets
 * On tablets: two panes (master on the left, content on the right)
 
-Java:
+Java code
+---------
+
 * make your activity extend `SplitActivity`.
 * implement `createMainFragment`: this method is called when the main fragment has to be created
 * implement `createContentFragment`: this method is called when the content fragment has to be created
 * you can override `createEmptyFragment` if you want to use a custom fragment when there is no content selected, but the UI has two panes.
+
+
+Here's an example of a minimal `Activity`:
+
 
 	public class MainActivity extends SplitActivity<MainListFragment, ContentFragment> {
 		@Override
@@ -30,7 +41,27 @@ Java:
 		}
 	}
 
-XML:
+
+Here's what your main fragment should do to load something (here we have a `ListView`, but it could be anything):
+
+
+	public class ContentFragment extends SherlockFragment {
+		// ...
+
+		@Override
+		public void onListItemClick(final ListView l, final View v, final int position, final long id) {
+			final Bundle args = new Bundle();
+			// ...
+			// build your Bundle with args for your contents fragment
+			((SplitActivity) getActivity()).selectContent(args);
+		}
+	}
+
+
+
+XML code
+--------
+
 just make your theme point to `Theme.SplitActivity` (or use this one as the parent of your theme). There is also `Theme.SplitActivity.Light` and all the family!
 All the themes have `Theme.Sherlock.*` as their parent, so no worries about your ActionBarSherlock setup.
 
