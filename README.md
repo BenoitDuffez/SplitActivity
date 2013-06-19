@@ -34,39 +34,42 @@ Java code
 Here's an example of a minimal `Activity`:
 
 
-	public class MainActivity extends SplitActivity<MainListFragment, ContentFragment> {
-		@Override
-		protected MainListFragment createMainFragment(Bundle args) {
-			return MainListFragment.newInstance(args);
-		}
-	
-		@Override
-		protected ContentFragment createContentFragment(final Bundle args) {
-			return ContentFragment.newInstance(args);
-		}
-	
-		@Override
-		protected Fragment createEmptyFragment(Bundle args) {
-			return new EmptyFragment();
-		}
+```java
+public class MainActivity extends SplitActivity<MainListFragment, ContentFragment> {
+	@Override
+	protected MainListFragment createMainFragment(Bundle args) {
+		return MainListFragment.newInstance(args);
 	}
+
+	@Override
+	protected ContentFragment createContentFragment(final Bundle args) {
+		return ContentFragment.newInstance(args);
+	}
+
+	@Override
+	protected Fragment createEmptyFragment(Bundle args) {
+		return new EmptyFragment();
+	}
+}
+```
 
 
 Here's what your main fragment should do to load something (here we have a `ListView`, but it could be anything):
 
 
-	public class ContentFragment extends SherlockFragment {
+```java
+public class ContentFragment extends SherlockFragment {
+	// ...
+
+	@Override
+	public void onListItemClick(final ListView l, final View v, final int position, final long id) {
+		final Bundle args = new Bundle();
 		// ...
-
-		@Override
-		public void onListItemClick(final ListView l, final View v, final int position, final long id) {
-			final Bundle args = new Bundle();
-			// ...
-			// build your Bundle with args for your contents fragment
-			((SplitActivity) getActivity()).selectContent(args);
-		}
+		// build your Bundle with args for your contents fragment
+		((SplitActivity) getActivity()).selectContent(args);
 	}
-
+}
+```
 
 
 XML code
@@ -79,6 +82,7 @@ All the themes have `Theme.Sherlock.*` as their parent, so no worries about your
 Themes:
 Your main theme can implement these:
 
+```xml
     <resources>
         <style name="Example" parent="Theme.SplitActivity.Light">
             <item name="mainPaneStyle">@style/MainPaneStyle</item>
@@ -87,9 +91,11 @@ Your main theme can implement these:
             <item name="separatorStyle">@style/SeparatorStyle</item>
         </style>
     </resources>
+```
 
 Here's an example of customization:
 
+```xml
     <!-- The container exists only when there are two panes. It's the big container. -->
     <style name="ContainerStyle" parent="Widget.SplitActivity.Container">
         <item name="android:background">#00FF00</item>
@@ -114,7 +120,7 @@ Here's an example of customization:
         <item name="android:background">#F00</item>
         <item name="android:layout_width">2dp</item>
     </style>
-
+```
 
 Don't forget to tune your styles with `-sw600dp-land` and `-sw720dp`!  
 For example, you could specify a different `layout_weight` ratio for 7" landscape and 10" tablets.
