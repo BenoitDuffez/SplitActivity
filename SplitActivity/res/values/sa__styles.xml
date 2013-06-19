@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <style name="SplitActivitySeparator">
+    <!-- Base styles for all android versions -->
+    <style name="Widget.SplitActivity" />
+    <style name="Widget.SplitActivity.Base" />
+    
+    <style name="Widget.SplitActivity.Base.Container">
+	    <item name="android:id">@id/sa__container</item>
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">match_parent</item>
+    </style>
+    
+    <style name="Widget.SplitActivity.Base.MainPane">
+	    <item name="android:id">@id/sa__main_pane</item>
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">match_parent</item>
+    </style>
+    
+    <style name="Widget.SplitActivity.Base.ContentPane">
+	    <item name="android:id">@id/sa__content_pane</item>
+	    <item name="android:layout_width">0dp</item>
+	    <item name="android:layout_height">match_parent</item>
+	    <item name="android:layout_weight">2</item>
+    </style>
+    
+    <!-- Used styles, that are overriden in values-xxx -->
+    <style name="Widget.SplitActivity.Container" parent="Widget.SplitActivity.Base.Container" />
+    <style name="Widget.SplitActivity.MainPane" parent="Widget.SplitActivity.Base.MainPane" />
+    <style name="Widget.SplitActivity.ContentPane" parent="Widget.SplitActivity.Base.ContentPane" />    
+    
+    <!-- Separator style -->
+    <style name="Widget.SplitActivity.Separator">
         <item name="android:background">@drawable/sa__separator_background</item>
         <item name="android:layout_width">3dp</item>
         <item name="android:layout_height">match_parent</item>

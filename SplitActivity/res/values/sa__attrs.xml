@@ -2,7 +2,10 @@
 <resources>
     
     <declare-styleable name="SplitActivityTheme">
-        <attr name="separatorStyle" format="reference"/>
+        <attr name="containerStyle" format="reference" />
+        <attr name="mainPaneStyle" format="reference" />
+        <attr name="contentPaneStyle" format="reference" />
+        <attr name="separatorStyle" format="reference" />
     </declare-styleable>
     
 </resources>

@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="SplitActivitySeparator">
-        <item name="separatorStyle">@style/SplitActivitySeparator</item>
+    
+    <style name="Theme.SplitActivity" parent="Theme.Sherlock">
+        <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
+        <item name="mainPaneStyle">@style/Widget.SplitActivity.MainPane</item>
+        <item name="contentPaneStyle">@style/Widget.SplitActivity.ContentPane</item>
+        <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
+    
+    <style name="Theme.SplitActivity.Light" parent="Theme.Sherlock.Light">
+        <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
+        <item name="mainPaneStyle">@style/Widget.SplitActivity.MainPane</item>
+        <item name="contentPaneStyle">@style/Widget.SplitActivity.ContentPane</item>
+        <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
+    </style>
+    
+    <style name="Theme.SplitActivity.Light.DarkActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
+        <item name="mainPaneStyle">@style/Widget.SplitActivity.MainPane</item>
+        <item name="contentPaneStyle">@style/Widget.SplitActivity.ContentPane</item>
+        <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
+    </style>
+    
+    <style name="Theme.SplitActivity.Light.NoActionBar" parent="Theme.Sherlock.Light.NoActionBar">
+        <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
+        <item name="mainPaneStyle">@style/Widget.SplitActivity.MainPane</item>
+        <item name="contentPaneStyle">@style/Widget.SplitActivity.ContentPane</item>
+        <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
+    </style>
+    
+    <style name="Theme.SplitActivity.NoActionBar" parent="Theme.Sherlock.NoActionBar">
+        <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
+        <item name="mainPaneStyle">@style/Widget.SplitActivity.MainPane</item>
+        <item name="contentPaneStyle">@style/Widget.SplitActivity.ContentPane</item>
+        <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
+    </style>
+    
 </resources>
