@@ -38,9 +38,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	/**
 	 * Optional arguments to pass to main fragment upon its creation.<br />
 	 * Override this to customize the main fragment arguments.
+	 * @param savedInstanceState The Bundle usually passed as parameter when calling onCreate
 	 * @return By default, an empty {@link android.os.Bundle Bundle} is returned.
 	 */
-	protected Bundle getMainFragmentArgs() {
+	protected Bundle getMainFragmentArgs(Bundle savedInstanceState) {
 		Log.d(TAG, "getMainFragmentArgs");
 		return new Bundle();
 	}
@@ -55,7 +56,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 		final FragmentManager fm = getSupportFragmentManager();
 		if (savedInstanceState == null) {
-			fm.beginTransaction().replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs()), TAG_MAIN).commit();
+			fm.beginTransaction().replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN).commit();
 
 			if (mIsSplitScreen) {
 				fm.beginTransaction().replace(R.id.sa__content_pane, createEmptyFragment(new Bundle()), TAG_CONTENT).commit();
@@ -79,7 +80,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 					fm.beginTransaction() //
 							.remove(mf) //
 							.remove(cf) //
-							.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
+							.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
 							.add(R.id.sa__content_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
 							.commit();
 				} else {
@@ -88,7 +89,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 						// Screen was showing the content pane
 						fm.beginTransaction() //
 								.remove(cf) //
-								.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
+								.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
 								.add(R.id.sa__content_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
 								.commit();
 						// fm.beginTransaction() //
@@ -115,7 +116,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 					} else {
 						// Content was not selected: show main fragment
 						fm.beginTransaction() //
-								.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
+								.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
 								.commit();
 					}
 				} else {
@@ -155,7 +156,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		if (mIsSplitScreen == false) {
 			if (mContentArgs != null) {
 				getSupportFragmentManager().beginTransaction() //
-						.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
+						.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(new Bundle())), TAG_MAIN) //
 						.commit();
 			} else {
 				finish();
