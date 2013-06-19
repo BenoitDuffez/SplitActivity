@@ -114,3 +114,9 @@ Here's an example of customization:
         <item name="android:background">#F00</item>
         <item name="android:layout_width">2dp</item>
     </style>
+
+
+Don't forget to tune your styles with `-sw600dp-land` and `-sw720dp`!  
+For example, you could specify a different `layout_weight` ratio for 7" landscape and 10" tablets.
+
+Go check the Samples app that is bundled, it should compile with a few tweaks and show pretty well how to use and style this.
