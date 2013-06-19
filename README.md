@@ -13,7 +13,7 @@ Java:
 * implement `createContentFragment`: this method is called when the content fragment has to be created
 * you can override `createEmptyFragment` if you want to use a custom fragment when there is no content selected, but the UI has two panes.
 
-  public class MainActivity extends SplitActivity<MainListFragment, ContentFragment> {
+	public class MainActivity extends SplitActivity<MainListFragment, ContentFragment> {
 		@Override
 		protected MainListFragment createMainFragment(Bundle args) {
 			return MainListFragment.newInstance(args);
