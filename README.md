@@ -62,7 +62,8 @@ Here's what your main fragment should do to load something (here we have a `List
 XML code
 --------
 
-just make your theme point to `Theme.SplitActivity` (or use this one as the parent of your theme). There is also `Theme.SplitActivity.Light` and all the family!
+Just make your theme point to `Theme.SplitActivity` (or use this one as the parent of your theme). There is also `Theme.SplitActivity.Light` and all the family!
+
 All the themes have `Theme.Sherlock.*` as their parent, so no worries about your ActionBarSherlock setup.
 
 Themes:
@@ -79,23 +80,27 @@ Your main theme can implement these:
 
 Here's an example of customization:
 
-    <!-- Master/content related styles -->
+    <!-- The container exists only when there are two panes. It's the big container. -->
     <style name="ContainerStyle" parent="Widget.SplitActivity.Container">
-        <!--<item name="android:background">#00FF00</item>-->
+        <item name="android:background">#00FF00</item>
     </style>
 
+    <!-- This is the main pane style. -->
     <style name="MainPaneStyle" parent="Widget.SplitActivity.MainPane">
         <item name="android:layout_margin">12dp</item>
         <item name="android:layout_weight">2</item>
         <item name="android:background">#FFF</item>
     </style>
 
+    <!-- This is the content pane style. It is used both when in single pane (phone) or dual pane (tablet) presentation. -->
     <style name="ContentPaneStyle" parent="Widget.SplitActivity.ContentPane">
         <item name="android:layout_margin">24dp</item>
         <item name="android:layout_weight">3</item>
         <item name="android:background">#FFF</item>
     </style>
 
+    <!-- This is the separator view between the master and the content. Of course, only used in tablet presentation! -->
     <style name="SeparatorStyle" parent="Widget.SplitActivity.Separator">
-        <item name="android:background">@null</item>
+        <item name="android:background">#F00</item>
+        <item name="android:layout_width">2dp</item>
     </style>
