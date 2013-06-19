@@ -7,10 +7,20 @@ Activity master+content pattern library.
 Behavior
 --------
 
+The activies that extend `SplitActivity` from this lib will display their content:
+
 * On phones: only one pane (either master or content)
 * On 7", portrait: same as phones
 * On 7", landscape: same as tablets
 * On tablets: two panes (master on the left, content on the right)
+
+Also, when there is a screen rotation, the activity behaves as expected. This can be tricky, especially on 7" tablets where we switch from single to dual pane display.
+
+It is then really easy to have a behavior like in the IO13 app:
+
+  Image: IO13 example
+![IO13 Example](https://raw.github.com/BenoitDuffez/SplitActivity/master/io13_example.png)
+
 
 Java code
 ---------
