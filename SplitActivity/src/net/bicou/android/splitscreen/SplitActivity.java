@@ -18,9 +18,28 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 	private static final String KEY_CONTENT_ARGS = "net.bicou.android.splitactivity.ContentFragmentArgs";
 
-	protected abstract MainFragment createMainFragment();
-
+	protected abstract MainFragment createMainFragment(Bundle args);
+	
 	protected abstract ContentFragment createContentFragment(Bundle args);
+
+	/**
+	 * Used to create the default empty fragment.<br />
+	 * Override this to customize the content fragment when nothing is selected from the main fragment.
+	 * @param args Arguments to the empty fragment
+	 * @return By default, the empty fragment is the one returned by {@link #createContentFragment(Bundle)} with an empty {@link android.os.Bundle Bundle}.
+	 */
+	protected Fragment createEmptyFragment(Bundle args) {
+		return createContentFragment(args);
+	}
+	
+	/**
+	 * Optional arguments to pass to main fragment upon its creation.<br />
+	 * Override this to customize the main fragment arguments.
+	 * @return By default, an empty {@link android.os.Bundle Bundle} is returned.
+	 */
+	protected Bundle getMainFragmentArgs(){
+		return new Bundle();
+	}
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -31,10 +50,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 		final FragmentManager fm = getSupportFragmentManager();
 		if (savedInstanceState == null) {
-			fm.beginTransaction().replace(R.id.sa__pane_main, createMainFragment(), TAG_MAIN).commit();
+			fm.beginTransaction().replace(R.id.sa__pane_main, createMainFragment(getMainFragmentArgs()), TAG_MAIN).commit();
 
 			if (mIsSplitScreen) {
-				fm.beginTransaction().replace(R.id.sa__pane_content, createContentFragment(null), TAG_CONTENT).commit();
+				fm.beginTransaction().replace(R.id.sa__pane_content, createEmptyFragment(new Bundle()), TAG_CONTENT).commit();
 			}
 		} else {
 			@SuppressWarnings("unchecked")
@@ -51,10 +70,11 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 			if (mIsSplitScreen) {
 				if (wasScreenSplit) {
+					// TODO: is it useful? I mean, the framework should recreate the fragments, right?
 					fm.beginTransaction() //
 							.remove(mf) //
 							.remove(cf) //
-							.add(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
+							.add(R.id.sa__pane_main, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
 							.add(R.id.sa__pane_content, createContentFragment(mContentArgs), TAG_CONTENT) //
 							.commit();
 				} else {
@@ -63,17 +83,16 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 						// Screen was showing the content pane
 						fm.beginTransaction() //
 								.remove(cf) //
-								.add(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
+								.add(R.id.sa__pane_main, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
 								.add(R.id.sa__pane_content, createContentFragment(mContentArgs), TAG_CONTENT) //
 								.commit();
 						// fm.beginTransaction() //
-						// .replace(R.id.sa__pane_main, createMainFragment(),
-						// TAG_MAIN) //
+						// .replace(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
 						// .commit();
 					} else {
 						// Screen was showing the main pane
 						fm.beginTransaction() //
-								.replace(R.id.sa__pane_content, createContentFragment(null), TAG_CONTENT) //
+								.replace(R.id.sa__pane_content, createEmptyFragment(new Bundle()), TAG_CONTENT) //
 								.commit();
 					}
 				}
@@ -89,7 +108,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 					} else {
 						// Content was not selected: show main fragment
 						fm.beginTransaction() //
-								.replace(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
+								.replace(R.id.sa__pane_main, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
 								.commit();
 					}
 				} else {
@@ -126,7 +145,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		if (mIsSplitScreen == false) {
 			if (mContentArgs != null) {
 				getSupportFragmentManager().beginTransaction() //
-						.replace(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
+						.replace(R.id.sa__pane_main, createMainFragment(getMainFragmentArgs()), TAG_MAIN) //
 						.commit();
 			} else {
 				finish();
