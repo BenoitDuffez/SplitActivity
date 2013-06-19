@@ -4,6 +4,7 @@ import net.bicou.android.splitscreen.SplitActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,27 +18,29 @@ public class MainListFragment extends SherlockListFragment {
 	ListAdapter mAdapter;
 	SplitActivity<Fragment, Fragment> mSplitActivity;
 
-	public static MainListFragment newInstance() {
+	public static MainListFragment newInstance(Bundle args) {
 		final MainListFragment frag = new MainListFragment();
+		frag.setArguments(args);
 		return frag;
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+		Log.d("SplitActivitySample", "MainListFragment#onCreateView()");
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		final Activity act = getActivity();
-		if (act instanceof SplitActivity) {
-			mSplitActivity = (SplitActivity<Fragment, Fragment>) act;
-			mAdapter = new ArrayAdapter<String>(act, R.layout.listview_item, android.R.id.text1, LIST_ITEMS);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		Log.d("SplitActivitySample", "MainListFragment#onAttach()");
+		if (activity instanceof SplitActivity) {
+			mSplitActivity = (SplitActivity<Fragment, Fragment>) activity;
+			mAdapter = new ArrayAdapter<String>(activity, R.layout.listview_item, android.R.id.text1, LIST_ITEMS);
 			setListAdapter(mAdapter);
 		} else {
-			throw new IllegalArgumentException(act.getClass().getSimpleName() + " must extend SplitActivity");
+			throw new IllegalArgumentException(activity.getClass().getSimpleName() + " must extend SplitActivity");
 		}
 	}
 
