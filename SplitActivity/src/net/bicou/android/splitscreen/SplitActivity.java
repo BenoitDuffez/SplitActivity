@@ -159,6 +159,42 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
+	 * Retrieves the current main fragment.
+	 * @return The main fragment if it is displayed on screen, null otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	public MainFragment getMainFragment() {
+		switch (getActiveContent()) {
+		case CONTENT:
+		default:
+			return null;
+			
+		case BOTH:
+		case MAIN:
+			return (MainFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
+		}
+	}
+
+	/**
+	 * Retrieves the current content fragment.
+	 * @return The content fragment if it is displayed on screen, null otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	public ContentFragment getContentFragment() {
+		switch (getActiveContent()) {
+		case BOTH:
+			return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTENT);
+			
+		case CONTENT:
+			return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
+			
+		case MAIN:
+		default:
+			return null;
+		}
+	}
+
+	/**
 	 * Callback used from the main fragment to trigger a choice for the content
 	 * fragment.<br />
 	 * If the screen is currently split, the content fragment is replaced with a
