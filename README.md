@@ -98,7 +98,7 @@ Here's an example of customization:
 ```xml
     <!-- The container exists only when there are two panes. It's the big container. -->
     <style name="ContainerStyle" parent="Widget.SplitActivity.Container">
-        <item name="android:background">#00FF00</item>
+        <item name="android:background">@drawable/hashed_background</item>
     </style>
 
     <!-- This is the main pane style. -->
