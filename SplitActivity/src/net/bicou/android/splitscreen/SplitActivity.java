@@ -193,6 +193,29 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 			return null;
 		}
 	}
+	
+	/**
+	 * Force display the main fragment.<br />
+	 * This can only be used in single pane layout, with the content fragment
+	 * currently active.
+	 * 
+	 * @param args
+	 *            Arguments required for the new main fragment
+	 * @return true if a fragment transaction was made, false otherwise.
+	 */
+	public boolean showMainFragment(Bundle args) {
+		switch (getActiveContent()) {
+		case CONTENT:
+			getSupportFragmentManager() //
+					.beginTransaction() //
+					.replace(R.id.sa__main_pane, createMainFragment(args), TAG_MAIN) //
+					.commit();
+			return true;
+
+		default:
+			return false;
+		}
+	}
 
 	/**
 	 * Callback used from the main fragment to trigger a choice for the content
