@@ -3,7 +3,7 @@ SplitActivity
 
 Activity master+content pattern library.
 
-  Image: IO13 example
+   Image: IO13 example
 ![IO13 Example](https://raw.github.com/BenoitDuffez/SplitActivity/master/io13_example.png)
 
 
