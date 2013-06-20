@@ -50,6 +50,16 @@ public class MainActivity extends SplitActivity<MainListFragment, ContentFragmen
 	protected Fragment createEmptyFragment(Bundle args) {
 		return new EmptyFragment();
 	}
+
+	private static class ProjectEmptyFragment extends SherlockFragment {
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View v = new LinearLayout(inflater.getContext());
+			v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			v.setBackgroundResource(R.drawable.projects_empty_fragment); // a custom empty image displayed in the center of the content pane
+			return v;
+		}
+	}
 }
 ```
 
