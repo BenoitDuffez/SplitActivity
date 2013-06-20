@@ -13,6 +13,11 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	private Bundle mContentArgs;
 	private Configuration mPreviousConfiguration;
 	
+	public enum ActiveContent {
+		BOTH,
+		MAIN,
+		CONTENT,
+	};
 	private static final String TAG = "SplitActivity";
 
 	private static final String TAG_MAIN = "net.bicou.android.splitactivity.MainFragmentTag";
@@ -126,11 +131,44 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		}
 	}
 
+	/**
+	 * Checks whether the screen is split in two panes or not
+	 * 
+	 * @return true if the screen is split in two panes, false otherwise
+	 */
 	public boolean isSplitScreen() {
 		Log.d(TAG, "isSplitScreen: "+mIsSplitScreen);
 		return mIsSplitScreen;
 	}
 
+	/**
+	 * Use this method to retrieve the current layout
+	 * 
+	 * @return {@link ActiveContent.BOTH} if the screen is split
+	 *         (10" tablets and 7" landscape tablets)<br />
+	 *         {@link ActiveContent.MAIN} if the screen is not split, and
+	 *         currently displaying the main pane (phones and 7" portrait tablets)<br />
+	 *         {@link ActiveContent.CONTENT} if the screen is not split, and
+	 *         currently displaying the content pane (phones and 7" portrait tablets).
+	 */
+	public ActiveContent getActiveContent() {
+		if (isSplitScreen()) {
+			return ActiveContent.BOTH;
+		}
+		return getSupportFragmentManager().findFragmentByTag(TAG_CONTENT) == null ? ActiveContent.MAIN : ActiveContent.CONTENT;
+	}
+
+	/**
+	 * Callback used from the main fragment to trigger a choice for the content
+	 * fragment.<br />
+	 * If the screen is currently split, the content fragment is replaced with a
+	 * new content fragment with the arguments passed as parameter.<br />
+	 * If the screen is not split, the whole screen is replaced with a new
+	 * content fragment with the arguments passed as a parameter.
+	 * 
+	 * @param args
+	 *            The arguments required to create the new content fragment.
+	 */
 	public void selectContent(final Bundle args) {
 		Log.d(TAG, "selectContent: "+args);
 		
