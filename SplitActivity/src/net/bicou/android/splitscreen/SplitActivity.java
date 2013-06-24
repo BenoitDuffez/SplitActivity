@@ -181,17 +181,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	@SuppressWarnings("unchecked")
 	public ContentFragment getContentFragment() {
-		switch (getActiveContent()) {
-		case BOTH:
-			return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTENT);
-			
-		case CONTENT:
-			return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
-			
-		case MAIN:
-		default:
-			return null;
-		}
+		return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTENT);
 	}
 	
 	/**
