@@ -10,7 +10,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends SherlockFragmentActivity {
 	private boolean mIsSplitScreen;
-	private Bundle mContentArgs;
+	private Bundle mMainState, mContentArgs;
 	private Configuration mPreviousConfiguration;
 	
 	public enum ActiveContent {
@@ -239,6 +239,38 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		} else {
 			fm.beginTransaction().replace(R.id.sa__main_pane, frag, TAG_CONTENT).addToBackStack("BackStack").commit();
 		}
+	}
+
+	/**
+	 * Call this when you need to save the main fragment state. This is used on
+	 * single pane layouts, where the main fragment will be recreated when the
+	 * user hits the back key from the content fragment.<br />
+	 * Typical flow:
+	 * 
+	 * <pre>
+	 * onCreateView() {
+	 *     final Bundle args = ((SplitActivity) getActivity()) getMainFragmentPreviousState());
+	 *     
+	 *     if (args == null) {
+	 *     		args = getArguments();
+	 *     }
+	 * }
+	 * 
+	 * onDestroyView() {
+	 *      Bundle args = new Bundle();
+	 *      // ... save state
+	 *      ((SplitActivity) getActivity()).saveMainFragmentState(args);
+	 * }
+	 * </pre>
+	 * 
+	 * @param args
+	 */
+	public void saveMainFragmentState(Bundle args) {
+		mMainState = args;
+	}
+	
+	public Bundle getMainFragmentPreviousState() {
+		return mMainState;
 	}
 
 	@Override
