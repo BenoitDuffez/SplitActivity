@@ -1,9 +1,9 @@
 package net.bicou.android.splitscreen;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -11,23 +11,32 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends SherlockFragmentActivity {
 	private boolean mIsSplitScreen;
 	private Bundle mMainState, mContentArgs;
-	private Configuration mPreviousConfiguration;
+	private static final boolean DEBUG = true;
+	private boolean mUseCustomEmptyFragment = true;
 	
 	public enum ActiveContent {
 		BOTH,
 		MAIN,
 		CONTENT,
 	};
+	
 	private static final String TAG = "SplitActivity";
 
 	private static final String TAG_MAIN = "net.bicou.android.splitactivity.MainFragmentTag";
 	private static final String TAG_CONTENT = "net.bicou.android.splitactivity.ContentFragmentTag";
 
 	private static final String KEY_CONTENT_ARGS = "net.bicou.android.splitactivity.ContentFragmentArgs";
+	private static final String KEY_IS_SPLIT_SCREEN = "net.bicou.android.splitactivity.IsSplitScreen";
 
 	protected abstract MainFragment createMainFragment(Bundle args);
 	
 	protected abstract ContentFragment createContentFragment(Bundle args);
+	
+	private void L(String msg) {
+		if (DEBUG) {
+			Log.d(TAG, msg);
+		}
+	}
 
 	/**
 	 * Used to create the default empty fragment.<br />
@@ -36,7 +45,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @return By default, the empty fragment is the one returned by {@link #createContentFragment(Bundle)} with an empty {@link android.os.Bundle Bundle}.
 	 */
 	protected Fragment createEmptyFragment(Bundle args) {
-		Log.d(TAG, "createEmptyFragment: "+args);
+		L("createEmptyFragment: "+args);
 		return createContentFragment(args);
 	}
 	
@@ -47,7 +56,8 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @return By default, an empty {@link android.os.Bundle Bundle} is returned.
 	 */
 	protected Bundle getMainFragmentArgs(Bundle savedInstanceState) {
-		Log.d(TAG, "getMainFragmentArgs");
+		L("getMainFragmentArgs");
+		mUseCustomEmptyFragment = false;
 		return new Bundle();
 	}
 
@@ -55,7 +65,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sa__activity_split_screen);
-		Log.d(TAG, "onCreate: "+savedInstanceState);
+		L("onCreate: "+savedInstanceState);
 
 		mIsSplitScreen = findViewById(R.id.sa__content_pane) != null;
 
@@ -71,10 +81,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 			final MainFragment mf = (MainFragment) fm.findFragmentByTag(TAG_MAIN);
 			@SuppressWarnings("unchecked")
 			final ContentFragment cf = (ContentFragment) fm.findFragmentByTag(TAG_CONTENT);
-			final boolean wasScreenSplit = mf != null && cf != null;
+			final boolean wasScreenSplit = savedInstanceState.getBoolean(KEY_IS_SPLIT_SCREEN, mf != null && cf != null);
 			mContentArgs = savedInstanceState.getBundle(KEY_CONTENT_ARGS);
 
-			Log.d(TAG, "IS=" + mIsSplitScreen + " WAS=" + wasScreenSplit //
+			L("IS=" + mIsSplitScreen + " WAS=" + wasScreenSplit //
 					+ " mf=" + (mf == null ? "null" : mf.getClass().getSimpleName()) //
 					+ " cf=" + (cf == null ? "null" : cf.getClass().getSimpleName()) //
 					+ " args=" + (mContentArgs == null ? "null" : mContentArgs.size() + " items"));
@@ -137,7 +147,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @return true if the screen is split in two panes, false otherwise
 	 */
 	public boolean isSplitScreen() {
-		Log.d(TAG, "isSplitScreen: "+mIsSplitScreen);
+		L("isSplitScreen: "+mIsSplitScreen);
 		return mIsSplitScreen;
 	}
 
@@ -219,16 +229,20 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 *            The arguments required to create the new content fragment.
 	 */
 	public void selectContent(final Bundle args) {
-		Log.d(TAG, "selectContent: "+args);
+		L("selectContent: "+args);
+		
+		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		final ContentFragment frag = createContentFragment(args);
+		int destination = mIsSplitScreen ? R.id.sa__content_pane : R.id.sa__main_pane;
+		
+		ft.replace(destination, frag, TAG_CONTENT);
+		// Add to back stack except if the previous content pane was filled with an empty fragment
+		if (!mIsSplitScreen || mContentArgs != null || !mUseCustomEmptyFragment) {
+			ft.addToBackStack("BackStack");
+		}
+		ft.commit();
 		
 		mContentArgs = args;
-		final FragmentManager fm = getSupportFragmentManager();
-		final ContentFragment frag = createContentFragment(args);
-		if (mIsSplitScreen) {
-			fm.beginTransaction().replace(R.id.sa__content_pane, frag, TAG_CONTENT).addToBackStack("BackStack").commit();
-		} else {
-			fm.beginTransaction().replace(R.id.sa__main_pane, frag, TAG_CONTENT).addToBackStack("BackStack").commit();
-		}
 	}
 
 	/**
@@ -266,8 +280,9 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "save: args=" + mContentArgs);
+		L("save: args=" + mContentArgs);
 		outState.putBundle(KEY_CONTENT_ARGS, mContentArgs);
+		outState.putBoolean(KEY_IS_SPLIT_SCREEN, mIsSplitScreen);
 	}
 
 	@Override
