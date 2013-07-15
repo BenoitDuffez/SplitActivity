@@ -99,7 +99,8 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 							.commit();
 				} else {
 					// Activity is now split: restore main/content panes
-					if (mf == null && cf != null && mContentArgs != null) {
+					Fragment mainPane = fm.findFragmentById(R.id.sa__main_pane);
+					if (cf != null && mainPane.getClass().equals(cf.getClass())) {
 						// Screen was showing the content pane
 						fm.beginTransaction() //
 								.remove(cf) //
