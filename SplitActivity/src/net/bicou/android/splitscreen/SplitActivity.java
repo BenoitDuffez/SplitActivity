@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends SherlockFragmentActivity {
@@ -13,13 +12,13 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	private Bundle mMainState, mContentArgs;
 	private static final boolean DEBUG = true;
 	private boolean mUseCustomEmptyFragment = true;
-	
+
 	public enum ActiveContent {
 		BOTH,
 		MAIN,
 		CONTENT,
-	};
-	
+	}
+
 	private static final String TAG = "SplitActivity";
 
 	private static final String TAG_MAIN = "net.bicou.android.splitactivity.MainFragmentTag";
@@ -29,9 +28,9 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	private static final String KEY_IS_SPLIT_SCREEN = "net.bicou.android.splitactivity.IsSplitScreen";
 
 	protected abstract MainFragment createMainFragment(Bundle args);
-	
+
 	protected abstract ContentFragment createContentFragment(Bundle args);
-	
+
 	private void L(String msg) {
 		if (DEBUG) {
 			Log.d(TAG, msg);
@@ -45,10 +44,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @return By default, the empty fragment is the one returned by {@link #createContentFragment(Bundle)} with an empty {@link android.os.Bundle Bundle}.
 	 */
 	protected Fragment createEmptyFragment(Bundle args) {
-		L("createEmptyFragment: "+args);
+		L("createEmptyFragment: " + args);
 		return createContentFragment(args);
 	}
-	
+
 	/**
 	 * Optional arguments to pass to main fragment upon its creation.<br />
 	 * Override this to customize the main fragment arguments.
@@ -65,7 +64,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sa__activity_split_screen);
-		L("onCreate: "+savedInstanceState);
+		L("onCreate: " + savedInstanceState);
 
 		mIsSplitScreen = findViewById(R.id.sa__content_pane) != null;
 
@@ -125,8 +124,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 								.remove(mf) //
 								.remove(cf) //
 								.commit();
-						fm.beginTransaction()
-								.add(R.id.sa__main_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
+						fm.beginTransaction().add(R.id.sa__main_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
 								.commit();
 					} else {
 						// Content was not selected: show main fragment
@@ -143,17 +141,17 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 	/**
 	 * Checks whether the screen is split in two panes or not
-	 * 
+	 *
 	 * @return true if the screen is split in two panes, false otherwise
 	 */
 	public boolean isSplitScreen() {
-		L("isSplitScreen: "+mIsSplitScreen);
+		L("isSplitScreen: " + mIsSplitScreen);
 		return mIsSplitScreen;
 	}
 
 	/**
 	 * Use this method to retrieve the current layout
-	 * 
+	 *
 	 * @return {@link ActiveContent.BOTH} if the screen is split
 	 *         (10" tablets and 7" landscape tablets)<br />
 	 *         {@link ActiveContent.MAIN} if the screen is not split, and
@@ -178,7 +176,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		case CONTENT:
 		default:
 			return null;
-			
+
 		case BOTH:
 		case MAIN:
 			return (MainFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
@@ -193,12 +191,12 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	public ContentFragment getContentFragment() {
 		return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTENT);
 	}
-	
+
 	/**
 	 * Force display the main fragment.<br />
 	 * This can only be used in single pane layout, with the content fragment
 	 * currently active.
-	 * 
+	 *
 	 * @param args
 	 *            Arguments required for the new main fragment
 	 * @return true if a fragment transaction was made, false otherwise.
@@ -224,24 +222,24 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * new content fragment with the arguments passed as parameter.<br />
 	 * If the screen is not split, the whole screen is replaced with a new
 	 * content fragment with the arguments passed as a parameter.
-	 * 
+	 *
 	 * @param args
 	 *            The arguments required to create the new content fragment.
 	 */
 	public void selectContent(final Bundle args) {
-		L("selectContent: "+args);
-		
+		L("selectContent: " + args);
+
 		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		final ContentFragment frag = createContentFragment(args);
 		int destination = mIsSplitScreen ? R.id.sa__content_pane : R.id.sa__main_pane;
-		
+
 		ft.replace(destination, frag, TAG_CONTENT);
 		// Add to back stack except if the previous content pane was filled with an empty fragment
 		if (!mIsSplitScreen || mContentArgs != null || !mUseCustomEmptyFragment) {
 			ft.addToBackStack("BackStack");
 		}
 		ft.commit();
-		
+
 		mContentArgs = args;
 	}
 
@@ -250,29 +248,29 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * single pane layouts, where the main fragment will be recreated when the
 	 * user hits the back key from the content fragment.<br />
 	 * Typical flow:
-	 * 
+	 *
 	 * <pre>
 	 * onCreateView() {
 	 *     final Bundle args = ((SplitActivity) getActivity()) getMainFragmentPreviousState());
-	 *     
+	 *
 	 *     if (args == null) {
 	 *     		args = getArguments();
 	 *     }
 	 * }
-	 * 
+	 *
 	 * onDestroyView() {
 	 *      Bundle args = new Bundle();
 	 *      // ... save state
 	 *      ((SplitActivity) getActivity()).saveMainFragmentState(args);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param args
 	 */
 	public void saveMainFragmentState(Bundle args) {
 		mMainState = args;
 	}
-	
+
 	public Bundle getMainFragmentPreviousState() {
 		return mMainState;
 	}
