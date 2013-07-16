@@ -29,7 +29,7 @@ Java code
 * implement `createMainFragment`: this method is called when the main fragment has to be created
 * implement `createContentFragment`: this method is called when the content fragment has to be created
 * you can override `createEmptyFragment` if you want to use a custom fragment when there is no content selected, but the UI has two panes.
-
+* set up your themes
 
 Here's an example of a minimal `Activity`:
 
@@ -51,7 +51,7 @@ public class MainActivity extends SplitActivity<MainListFragment, ContentFragmen
 		return new EmptyFragment();
 	}
 
-	private static class ProjectEmptyFragment extends SherlockFragment {
+	private static class EmptyFragment extends SherlockFragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View v = new LinearLayout(inflater.getContext());
@@ -68,7 +68,7 @@ Here's what your main fragment should do to load something (here we have a `List
 
 
 ```java
-public class ContentFragment extends SherlockFragment {
+public class MainFragment extends SherlockFragment {
 	// ...
 
 	@Override
@@ -77,6 +77,8 @@ public class ContentFragment extends SherlockFragment {
 		// ...
 		// build your Bundle with args for your contents fragment
 		((SplitActivity) getActivity()).selectContent(args);
+		// this call will replace the current active fragment with the content one on phones,
+		// and will just replace the content fragment on tablets
 	}
 }
 ```
