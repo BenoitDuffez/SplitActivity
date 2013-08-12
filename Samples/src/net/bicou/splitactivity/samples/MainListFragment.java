@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import net.bicou.android.splitscreen.SplitActivity;
+import net.bicou.splitactivity.SplitActivity;
 
 public class MainListFragment extends SherlockListFragment {
 	ListAdapter mAdapter;

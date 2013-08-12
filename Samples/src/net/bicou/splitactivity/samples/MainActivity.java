@@ -1,6 +1,6 @@
 package net.bicou.splitactivity.samples;
 
-import net.bicou.android.splitscreen.SplitActivity;
+import net.bicou.splitactivity.SplitActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
