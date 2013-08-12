@@ -6,7 +6,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="main_list_title">List title</string>
     <string name="main_list_empty">Empty list.</string>
-    <string name="content_title">Content pane</string>
+    <string name="sa__content_title">Content pane</string>
     <string name="sa__content_empty">This is the empty content fragment. Select something to display it here.</string>
+    <string name="sa__subactivity_textview">This is just a sub-activity</string>
+    <string name="sa__open_subactivity">Open sub-activity</string>
+    <string name="sa__subactivity_title">Sub-Activity</string>
 
 </resources>
