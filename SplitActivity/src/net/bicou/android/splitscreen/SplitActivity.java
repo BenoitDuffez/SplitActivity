@@ -38,9 +38,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
-	 * Used to create the default empty fragment.<br />
-	 * Override this to customize the content fragment when nothing is selected from the main fragment.
+	 * Used to create the default empty fragment.<br /> Override this to customize the content fragment when nothing is selected from the main fragment.
+	 *
 	 * @param args Arguments to the empty fragment
+	 *
 	 * @return By default, the empty fragment is the one returned by {@link #createContentFragment(Bundle)} with an empty {@link android.os.Bundle Bundle}.
 	 */
 	protected Fragment createEmptyFragment(Bundle args) {
@@ -49,9 +50,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
-	 * Optional arguments to pass to main fragment upon its creation.<br />
-	 * Override this to customize the main fragment arguments.
+	 * Optional arguments to pass to main fragment upon its creation.<br /> Override this to customize the main fragment arguments.
+	 *
 	 * @param savedInstanceState The Bundle usually passed as parameter when calling onCreate
+	 *
 	 * @return By default, an empty {@link android.os.Bundle Bundle} is returned.
 	 */
 	protected Bundle getMainFragmentArgs(Bundle savedInstanceState) {
@@ -153,12 +155,11 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	/**
 	 * Use this method to retrieve the current layout
 	 *
-	 * @return {@link ActiveContent.BOTH} if the screen is split
-	 *         (10" tablets and 7" landscape tablets)<br />
-	 *         {@link ActiveContent.MAIN} if the screen is not split, and
-	 *         currently displaying the main pane (phones and 7" portrait tablets)<br />
-	 *         {@link ActiveContent.CONTENT} if the screen is not split, and
-	 *         currently displaying the content pane (phones and 7" portrait tablets).
+	 * @return {@link ActiveContent.BOTH} if the screen is split (10" tablets and 7" landscape tablets)<br /> {@link ActiveContent.MAIN} if the screen is not
+	 * split, and
+	 * currently displaying the main pane (phones and 7" portrait tablets)<br /> {@link ActiveContent.CONTENT} if the screen is not split,
+	 * and currently displaying the
+	 * content pane (phones and 7" portrait tablets).
 	 */
 	public ActiveContent getActiveContent() {
 		if (isSplitScreen()) {
@@ -169,6 +170,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 	/**
 	 * Retrieves the current main fragment.
+	 *
 	 * @return The main fragment if it is displayed on screen, null otherwise.
 	 */
 	@SuppressWarnings("unchecked")
@@ -186,6 +188,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 	/**
 	 * Retrieves the current content fragment.
+	 *
 	 * @return The content fragment if it is displayed on screen, null otherwise.
 	 */
 	@SuppressWarnings("unchecked")
@@ -194,12 +197,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
-	 * Force display the main fragment.<br />
-	 * This can only be used in single pane layout, with the content fragment
-	 * currently active.
+	 * Force display the main fragment.<br /> This can only be used in single pane layout, with the content fragment currently active.
 	 *
-	 * @param args
-	 *            Arguments required for the new main fragment
+	 * @param args Arguments required for the new main fragment
+	 *
 	 * @return true if a fragment transaction was made, false otherwise.
 	 */
 	public boolean showMainFragment(Bundle args) {
@@ -217,15 +218,13 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
-	 * Callback used from the main fragment to trigger a choice for the content
-	 * fragment.<br />
-	 * If the screen is currently split, the content fragment is replaced with a
-	 * new content fragment with the arguments passed as parameter.<br />
-	 * If the screen is not split, the whole screen is replaced with a new
-	 * content fragment with the arguments passed as a parameter.
+	 * Callback used from the main fragment to trigger a choice for the content fragment.<br /> If the screen is currently split,
+	 * the content fragment is replaced with
+	 * a new content fragment with the arguments passed as parameter.<br /> If the screen is not split, the whole screen is replaced with a new content fragment
+	 * with
+	 * the arguments passed as a parameter.
 	 *
-	 * @param args
-	 *            The arguments required to create the new content fragment.
+	 * @param args The arguments required to create the new content fragment.
 	 */
 	public void selectContent(final Bundle args) {
 		L("selectContent: " + args);
@@ -245,11 +244,10 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
-	 * Call this when you need to save the main fragment state. This is used on
-	 * single pane layouts, where the main fragment will be recreated when the
-	 * user hits the back key from the content fragment.<br />
-	 * Typical flow:
-	 *
+	 * Call this when you need to save the main fragment state. This is used on single pane layouts, where the main fragment will be recreated when the user hits
+	 * the
+	 * back key from the content fragment.<br /> Typical flow:
+	 * <p/>
 	 * <pre>
 	 * onCreateView() {
 	 *     final Bundle args = ((SplitActivity) getActivity()) getMainFragmentPreviousState());
@@ -265,8 +263,6 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 *      ((SplitActivity) getActivity()).saveMainFragmentState(args);
 	 * }
 	 * </pre>
-	 *
-	 * @param args
 	 */
 	public void saveMainFragmentState(Bundle args) {
 		mMainState = args;
@@ -286,17 +282,18 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 
 	@Override
 	public void onBackPressed() {
-		if (mIsSplitScreen == false) {
-			if (mContentArgs != null) {
-				getSupportFragmentManager().beginTransaction() //
-						.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(new Bundle())), TAG_MAIN) //
-						.commit();
-			} else {
-				finish();
-			}
-		} else {
-			super.onBackPressed();
-		}
-		mContentArgs = null;
+		L("onBackPressed; isSplit: " + mIsSplitScreen + ", contentArgs: " + mContentArgs);
+		//		if (mIsSplitScreen) {
+		//			super.onBackPressed();
+		//		} else {
+		//			if (mContentArgs != null) {
+		//				getSupportFragmentManager().beginTransaction() //
+		//						.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(new Bundle())), TAG_MAIN) //
+		//						.commit();
+		//			} else {
+		//				finish();
+		//			}
+		//		}
+		//		mContentArgs = null;
 	}
 }
