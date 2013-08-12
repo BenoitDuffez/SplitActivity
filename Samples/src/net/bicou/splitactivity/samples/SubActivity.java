@@ -1,4 +1,4 @@
-package net.bicou.android.splitactivity.samples;
+package net.bicou.splitactivity.samples;
 
 import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockActivity;

@@ -1,4 +1,4 @@
-package net.bicou.android.splitactivity.samples;
+package net.bicou.splitactivity.samples;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class ContentFragment extends SherlockFragment {
-	public static final String KEY_CONTENT_TEXT = "net.bicou.android.splitactivity.samples.ContentText";
+	public static final String KEY_CONTENT_TEXT = "net.bicou.splitactivity.samples.ContentText";
 
 	public static ContentFragment newInstance(final Bundle args) {
 		final ContentFragment frag = new ContentFragment();
