@@ -162,6 +162,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * content pane (phones and 7" portrait tablets).
 	 */
 	public ActiveContent getActiveContent() {
+		L("getActiveContent");
 		if (isSplitScreen()) {
 			return ActiveContent.BOTH;
 		}
@@ -175,6 +176,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	@SuppressWarnings("unchecked")
 	public MainFragment getMainFragment() {
+		L("getMainFragment");
 		switch (getActiveContent()) {
 		case CONTENT:
 		default:
@@ -193,6 +195,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	@SuppressWarnings("unchecked")
 	public ContentFragment getContentFragment() {
+		L("getContentFragment");
 		return (ContentFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTENT);
 	}
 
@@ -204,6 +207,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @return true if a fragment transaction was made, false otherwise.
 	 */
 	public boolean showMainFragment(Bundle args) {
+		L("showMainFragment: " + args);
 		switch (getActiveContent()) {
 		case CONTENT:
 			getSupportFragmentManager() //
@@ -265,10 +269,12 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * </pre>
 	 */
 	public void saveMainFragmentState(Bundle args) {
+		L("saveMainFragmentState");
 		mMainState = args;
 	}
 
 	public Bundle getMainFragmentPreviousState() {
+		L("getMainFragmentPreviousState");
 		return mMainState;
 	}
 
