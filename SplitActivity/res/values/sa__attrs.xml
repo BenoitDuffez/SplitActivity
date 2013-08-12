@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <declare-styleable name="SplitActivityTheme">
         <attr name="containerStyle" format="reference" />
-        <attr name="mainPaneStyle" format="reference" />
-        <attr name="contentPaneStyle" format="reference" />
+        <attr name="leftPaneStyle" format="reference" />
+        <attr name="rightPaneStyle" format="reference" />
         <attr name="separatorStyle" format="reference" />
     </declare-styleable>
-    
+
 </resources>

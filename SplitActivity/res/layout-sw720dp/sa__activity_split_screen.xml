@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="?attr/containerStyle">
 
-    <FrameLayout style="?attr/mainPaneStyle" />
+    <FrameLayout style="?attr/leftPaneStyle" />
 
     <View style="?attr/separatorStyle" />
 
-    <FrameLayout style="?attr/contentPaneStyle" />
+    <FrameLayout style="?attr/rightPaneStyle" />
 
 </LinearLayout>

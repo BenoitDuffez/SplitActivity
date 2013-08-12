@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import net.bicou.android.splitscreen.R;
 
 public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends SherlockFragmentActivity {
 	private boolean mIsSplitScreen;
