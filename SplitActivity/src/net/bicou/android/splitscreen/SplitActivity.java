@@ -290,7 +290,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	public void onBackPressed() {
 		L("onBackPressed; isSplit: " + mIsSplitScreen + ", contentArgs: " + mContentArgs);
 		//		if (mIsSplitScreen) {
-		//			super.onBackPressed();
+		super.onBackPressed();
 		//		} else {
 		//			if (mContentArgs != null) {
 		//				getSupportFragmentManager().beginTransaction() //
