@@ -1,6 +1,5 @@
 package net.bicou.splitactivity.samples;
 
-import net.bicou.android.splitscreen.SplitActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
 import com.actionbarsherlock.app.SherlockListFragment;
+import net.bicou.android.splitscreen.SplitActivity;
 
 public class MainListFragment extends SherlockListFragment {
 	ListAdapter mAdapter;
@@ -26,7 +25,7 @@ public class MainListFragment extends SherlockListFragment {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		Log.d("SplitActivitySample", "MainListFragment#onCreateView()");
+		Log.d("SplitActivitySample", "MainListFragment#onCreateView(" + savedInstanceState + ")");
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -34,7 +33,7 @@ public class MainListFragment extends SherlockListFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.d("SplitActivitySample", "MainListFragment#onAttach()");
+		Log.d("SplitActivitySample", "MainListFragment#onAttach(" + activity + ")");
 		if (activity instanceof SplitActivity) {
 			mSplitActivity = (SplitActivity<Fragment, Fragment>) activity;
 			mAdapter = new ArrayAdapter<String>(activity, R.layout.listview_item, android.R.id.text1, LIST_ITEMS);

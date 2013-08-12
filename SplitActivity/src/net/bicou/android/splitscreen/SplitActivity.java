@@ -46,6 +46,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	protected Fragment createEmptyFragment(Bundle args) {
 		L("createEmptyFragment: " + args);
+		mUseCustomEmptyFragment = false;
 		return createContentFragment(args);
 	}
 
@@ -58,7 +59,6 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	protected Bundle getMainFragmentArgs(Bundle savedInstanceState) {
 		L("getMainFragmentArgs");
-		mUseCustomEmptyFragment = false;
 		return new Bundle();
 	}
 
@@ -68,75 +68,60 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		setContentView(R.layout.sa__activity_split_screen);
 		L("onCreate: " + savedInstanceState);
 
-		mIsSplitScreen = findViewById(R.id.sa__content_pane) != null;
-
+		mIsSplitScreen = findViewById(R.id.sa__right_pane) != null;
 		final FragmentManager fm = getSupportFragmentManager();
+		final MainFragment mf = getMainFragment();
+		final ContentFragment cf = getContentFragment();
+		Fragment lp = fm.findFragmentById(R.id.sa__left_pane);
+		Fragment rp = fm.findFragmentById(R.id.sa__right_pane);
+		final boolean wasScreenSplit = savedInstanceState != null && savedInstanceState.getBoolean(KEY_IS_SPLIT_SCREEN, mf != null && cf != null);
+		mContentArgs = savedInstanceState == null ? null : savedInstanceState.getBundle(KEY_CONTENT_ARGS);
+
+		dumpState("onCreate, savedInstanceState: " + savedInstanceState);
+		L("IS=" + mIsSplitScreen + " WAS=" + wasScreenSplit);
+		L("saved content args=" + mContentArgs);
+		L("---------------------------------------------------------------------");
+
 		if (savedInstanceState == null) {
-			fm.beginTransaction().replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN).commit();
+			fm.beginTransaction().replace(R.id.sa__left_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN).commit();
 
 			if (mIsSplitScreen) {
-				fm.beginTransaction().replace(R.id.sa__content_pane, createEmptyFragment(new Bundle()), TAG_CONTENT).commit();
+				fm.beginTransaction().replace(R.id.sa__right_pane, createEmptyFragment(new Bundle()), TAG_CONTENT).commit();
 			}
 		} else {
-			@SuppressWarnings("unchecked")
-			final MainFragment mf = (MainFragment) fm.findFragmentByTag(TAG_MAIN);
-			@SuppressWarnings("unchecked")
-			final ContentFragment cf = (ContentFragment) fm.findFragmentByTag(TAG_CONTENT);
-			final boolean wasScreenSplit = savedInstanceState.getBoolean(KEY_IS_SPLIT_SCREEN, mf != null && cf != null);
-			mContentArgs = savedInstanceState.getBundle(KEY_CONTENT_ARGS);
-
-			L("IS=" + mIsSplitScreen + " WAS=" + wasScreenSplit //
-					+ " mf=" + (mf == null ? "null" : mf.getClass().getSimpleName()) //
-					+ " cf=" + (cf == null ? "null" : cf.getClass().getSimpleName()) //
-					+ " args=" + (mContentArgs == null ? "null" : mContentArgs.size() + " items"));
-
-			if (mIsSplitScreen) {
-				if (wasScreenSplit) {
-					// TODO: is it useful? I mean, the framework should recreate the fragments, right?
-					fm.beginTransaction() //
-							.remove(mf) //
-							.remove(cf) //
-							.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
-							.add(R.id.sa__content_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
-							.commit();
-				} else {
-					// Activity is now split: restore main/content panes
-					Fragment mainPane = fm.findFragmentById(R.id.sa__main_pane);
-					if (cf != null && mainPane.getClass().equals(cf.getClass())) {
-						// Screen was showing the content pane
-						fm.beginTransaction() //
-								.remove(cf) //
-								.add(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
-								.add(R.id.sa__content_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
-								.commit();
-						// fm.beginTransaction() //
-						// .replace(R.id.sa__pane_main, createMainFragment(), TAG_MAIN) //
-						// .commit();
-					} else {
-						// Screen was showing the main pane
-						fm.beginTransaction() //
-								.replace(R.id.sa__content_pane, createEmptyFragment(new Bundle()), TAG_CONTENT) //
-								.commit();
-					}
-				}
-			} else {
-				if (wasScreenSplit) {
+			if (mIsSplitScreen != wasScreenSplit) {
+				// Layout change, we need to tell the framework which fragment to display in which pane
+				if (mIsSplitScreen) {
 					if (mContentArgs != null) {
-						// Some content was selected: show content fragment
-						fm.beginTransaction() //
-								.remove(mf) //
-								.remove(cf) //
-								.commit();
-						fm.beginTransaction().add(R.id.sa__main_pane, createContentFragment(mContentArgs), TAG_CONTENT) //
-								.commit();
+						FragmentTransaction ft = fm.beginTransaction();
+						ft.replace(R.id.sa__left_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)));
+						ft.replace(R.id.sa__right_pane, createContentFragment(mContentArgs));
+						ft.commit();
 					} else {
-						// Content was not selected: show main fragment
-						fm.beginTransaction() //
-								.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)), TAG_MAIN) //
-								.commit();
+						FragmentTransaction ft = fm.beginTransaction();
+						if (rp != null) {
+							ft.remove(rp);
+						}
+						if (lp != null) {
+							ft.remove(lp);
+						}
+						ft.add(R.id.sa__left_pane, createMainFragment(getMainFragmentPreviousState()));
+						ft.add(R.id.sa__right_pane, createEmptyFragment(new Bundle()));
+						ft.commit();
 					}
 				} else {
-					// Screen wasn't split and still isn't, nothing to do
+					if (mContentArgs != null) {
+						FragmentTransaction ft = fm.beginTransaction();
+						//						ft.remove(lp);
+						ft.replace(R.id.sa__left_pane, createContentFragment(mContentArgs));
+						ft.remove(rp);
+						ft.commit();
+					} else {
+						FragmentTransaction ft = fm.beginTransaction();
+						ft.replace(R.id.sa__left_pane, createMainFragment(getMainFragmentArgs(savedInstanceState)));
+						ft.remove(lp);
+						ft.commit();
+					}
 				}
 			}
 		}
@@ -147,6 +132,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 *
 	 * @return true if the screen is split in two panes, false otherwise
 	 */
+
 	public boolean isSplitScreen() {
 		L("isSplitScreen: " + mIsSplitScreen);
 		return mIsSplitScreen;
@@ -177,15 +163,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	@SuppressWarnings("unchecked")
 	public MainFragment getMainFragment() {
 		L("getMainFragment");
-		switch (getActiveContent()) {
-		case CONTENT:
-		default:
-			return null;
-
-		case BOTH:
-		case MAIN:
-			return (MainFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
-		}
+		return (MainFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
 	}
 
 	/**
@@ -212,7 +190,7 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		case CONTENT:
 			getSupportFragmentManager() //
 					.beginTransaction() //
-					.replace(R.id.sa__main_pane, createMainFragment(args), TAG_MAIN) //
+					.replace(R.id.sa__left_pane, createMainFragment(args), TAG_MAIN) //
 					.commit();
 			return true;
 
@@ -231,17 +209,14 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 * @param args The arguments required to create the new content fragment.
 	 */
 	public void selectContent(final Bundle args) {
-		L("selectContent: " + args);
+		dumpState("selectContent, args: " + args);
 
 		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		final ContentFragment frag = createContentFragment(args);
-		int destination = mIsSplitScreen ? R.id.sa__content_pane : R.id.sa__main_pane;
+		int destination = mIsSplitScreen ? R.id.sa__right_pane : R.id.sa__left_pane;
 
 		ft.replace(destination, frag, TAG_CONTENT);
-		// Add to back stack except if the previous content pane was filled with an empty fragment
-		if (!mIsSplitScreen || mContentArgs != null || !mUseCustomEmptyFragment) {
-			ft.addToBackStack("BackStack");
-		}
+		ft.addToBackStack("BackStack");
 		ft.commit();
 
 		mContentArgs = args;
@@ -286,20 +261,69 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		outState.putBoolean(KEY_IS_SPLIT_SCREEN, mIsSplitScreen);
 	}
 
+	private void dumpState(final String s) {
+		if (!DEBUG) {
+			return;
+		}
+
+		mIsSplitScreen = findViewById(R.id.sa__right_pane) != null;
+		final FragmentManager fm = getSupportFragmentManager();
+		final MainFragment mf = getMainFragment();
+		final ContentFragment cf = getContentFragment();
+		Fragment lp = fm.findFragmentById(R.id.sa__left_pane);
+		Fragment rp = fm.findFragmentById(R.id.sa__right_pane);
+
+		L("--------------------------------------- " + s);
+		L("IS=" + mIsSplitScreen);
+		if (mf == null) {
+			L("main frag    = null");
+		} else {
+			L("main frag    = " + mf.getClass().getSimpleName() + ":" + mf.hashCode() + " attached @ " + (mf.getId() == R.id.sa__left_pane ? "left pane" : (mf
+					.getId() == R.id.sa__right_pane ? "right pane" : "unknown")));
+		}
+		if (cf == null) {
+			L("content frag = null");
+		} else {
+			L("content frag = " + cf.getClass().getSimpleName() + ":" + cf.hashCode() + " attached @ " + (cf.getId() == R.id.sa__left_pane ? "left pane" : (cf
+					.getId() == R.id.sa__right_pane ? "right pane" : "unknown pane")));
+		}
+		if (lp == null) {
+			L("left pane    = null");
+		} else {
+			L("left pane    = " + lp.getClass().getSimpleName() + ":" + lp.hashCode() + " Tag:" + lp.getTag() + " args:" + lp.getArguments());
+		}
+		if (rp == null) {
+			L("right pane   = null");
+		} else {
+			L("right pane   = " + rp.getClass().getSimpleName() + ":" + rp.hashCode() + " Tag:" + rp.getTag() + " args:" + rp.getArguments());
+		}
+		L("saved content args=" + mContentArgs);
+		L("---------------------------------------------------------------------");
+	}
+
 	@Override
 	public void onBackPressed() {
-		L("onBackPressed; isSplit: " + mIsSplitScreen + ", contentArgs: " + mContentArgs);
-		//		if (mIsSplitScreen) {
+		dumpState("onBackPressed");
+		mContentArgs = null;
+
+		// Don't know why some rogue fragments stay and overlap in the right pane
+		// Happens with 7" and the following behavior
+		//-----------------------------------------------------------------------------
+		// step		   action taken       	 layout mode		content of right pane
+		//-----------------------------------------------------------------------------
+		//  1.		  normal start        		dual				  empty
+		//  2. 		  selectContent       		dual				 content
+		//  3. 		 screen rotation     	   single				 content
+		//  4. 		 screen rotation     		dual				 content
+		//  5. 			back press          	dual			  double content  :(
+		//-----------------------------------------------------------------------------
+		if (mIsSplitScreen) {
+			if (getMainFragment() == null) {
+				Fragment f = getSupportFragmentManager().findFragmentById(R.id.sa__right_pane);
+				getSupportFragmentManager().beginTransaction().remove(f).commit();
+			}
+		}
+
 		super.onBackPressed();
-		//		} else {
-		//			if (mContentArgs != null) {
-		//				getSupportFragmentManager().beginTransaction() //
-		//						.replace(R.id.sa__main_pane, createMainFragment(getMainFragmentArgs(new Bundle())), TAG_MAIN) //
-		//						.commit();
-		//			} else {
-		//				finish();
-		//			}
-		//		}
-		//		mContentArgs = null;
 	}
 }
