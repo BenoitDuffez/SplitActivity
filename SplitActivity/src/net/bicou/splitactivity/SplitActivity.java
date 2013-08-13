@@ -306,22 +306,45 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		dumpState("onBackPressed");
 		mContentArgs = null;
 
-		// Don't know why some rogue fragments stay and overlap in the right pane
-		// Happens with 7" and the following behavior
-		//-----------------------------------------------------------------------------
-		// step		   action taken       	 layout mode		content of right pane
-		//-----------------------------------------------------------------------------
-		//  1.		  normal start        		dual				  empty
-		//  2. 		  selectContent       		dual				 content
-		//  3. 		 screen rotation     	   single				 content
-		//  4. 		 screen rotation     		dual				 content
-		//  5. 			back press          	dual			  double content  :(
-		//-----------------------------------------------------------------------------
+		// Don't know why some rogue fragments won't disappear
 		if (mIsSplitScreen) {
+			FragmentManager fm = getSupportFragmentManager();
+			// Happens with 7" and the following behavior: 2 content fragments stay and overlap in the right pane
+			//-----------------------------------------------------------------------------
+			// step		   action taken       	 layout mode		content of right pane
+			//-----------------------------------------------------------------------------
+			//  1.		  normal start        		dual				  empty
+			//  2. 		  selectContent       		dual				 content
+			//  3. 		 screen rotation     	   single				 content
+			//  4. 		 screen rotation     		dual				 content
+			//  5. 			back press          	dual			  double content  :(
+			//-----------------------------------------------------------------------------
 			if (getMainFragment() == null) {
-				Fragment f = getSupportFragmentManager().findFragmentById(R.id.sa__right_pane);
-				getSupportFragmentManager().beginTransaction().remove(f).commit();
+				Fragment f = fm.findFragmentById(R.id.sa__right_pane);
+				fm.beginTransaction().remove(f).commit();
 			}
+
+
+			// Happens with 7" and the following behavior: back button has no effect and doesn't do content -> empty
+			//-----------------------------------------------------------------------------
+			// step		   action taken       	 layout mode		content of right pane
+			//-----------------------------------------------------------------------------
+			//  1.		  normal start        	   single				  N/A
+			//  2. 		  selectContent       	   single				 content
+			//  3. 	   launch sub-activity     	   single			  sub-activity
+			//  4. 		 screen rotation     	   single				 content
+			//  5. 			back press          	dual			  	 content
+			//  6. 			back press          	dual			  	 content :(
+			//-----------------------------------------------------------------------------
+			ContentFragment cf = getContentFragment();
+			if (cf != null) {
+				fm.beginTransaction().remove(cf).commit();
+			}
+			Fragment f = fm.findFragmentById(R.id.sa__right_pane);
+			if (f != null) {
+				fm.beginTransaction().remove(f).commit();
+			}
+			fm.beginTransaction().add(R.id.sa__right_pane, createEmptyFragment(new Bundle()), TAG_CONTENT).commit();
 		}
 
 		super.onBackPressed();
