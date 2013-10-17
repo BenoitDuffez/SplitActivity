@@ -11,7 +11,6 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	private boolean mIsSplitScreen;
 	private Bundle mMainState, mContentArgs;
 	private static final boolean DEBUG = true;
-	private boolean mUseCustomEmptyFragment = true;
 
 	public enum ActiveContent {
 		BOTH,
@@ -46,7 +45,6 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	 */
 	protected Fragment createEmptyFragment(Bundle args) {
 		L("createEmptyFragment: " + args);
-		mUseCustomEmptyFragment = false;
 		return createContentFragment(args);
 	}
 
