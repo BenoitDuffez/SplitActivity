@@ -223,6 +223,25 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	}
 
 	/**
+	 * Hide the current fragment and display an empty fragment instead
+	 *
+	 * @param args The arguments required to create the empty fragment. Will be passed to {@link #createEmptyFragment(android.os.Bundle)}
+	 */
+	public void selectEmptyFragment(Bundle args) {
+		dumpState("selectEmptyFragment, args: " + args);
+
+		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		final Fragment frag = createEmptyFragment(args);
+		int destination = mIsSplitScreen ? R.id.sa__right_pane : R.id.sa__left_pane;
+
+		ft.replace(destination, frag, TAG_CONTENT);
+		ft.addToBackStack("BackStack");
+		ft.commit();
+
+		mContentArgs = args;
+	}
+
+	/**
 	 * Call this when you need to save the main fragment state. This is used on single pane layouts, where the main fragment will be recreated when the user hits
 	 * the
 	 * back key from the content fragment.<br /> Typical flow:
