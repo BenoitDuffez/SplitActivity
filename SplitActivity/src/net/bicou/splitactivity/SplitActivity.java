@@ -141,9 +141,9 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 	/**
 	 * Use this method to retrieve the current layout
 	 *
-	 * @return {@link ActiveContent.BOTH} if the screen is split (10" tablets and 7" landscape tablets)<br /> {@link ActiveContent.MAIN} if the screen is not
+	 * @return {@link ActiveContent#BOTH} if the screen is split (10" tablets and 7" landscape tablets)<br /> {@link ActiveContent#MAIN} if the screen is not
 	 * split, and
-	 * currently displaying the main pane (phones and 7" portrait tablets)<br /> {@link ActiveContent.CONTENT} if the screen is not split,
+	 * currently displaying the main pane (phones and 7" portrait tablets)<br /> {@link ActiveContent#CONTENT} if the screen is not split,
 	 * and currently displaying the
 	 * content pane (phones and 7" portrait tablets).
 	 */
