@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import net.bicou.splitactivity.R;
 
-public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends SherlockFragmentActivity {
+public abstract class SplitActivity<MainFragment extends Fragment, ContentFragment extends Fragment> extends ActionBarActivity {
 	private boolean mIsSplitScreen;
 	private Bundle mMainState, mContentArgs;
 	private static final boolean DEBUG = true;

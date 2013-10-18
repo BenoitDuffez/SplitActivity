@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SplitActivity" parent="Theme.Sherlock">
+    <style name="Theme.SplitActivity" parent="@style/Theme.AppCompat">
         <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
         <item name="leftPaneStyle">@style/Widget.SplitActivity.LeftPane</item>
         <item name="rightPaneStyle">@style/Widget.SplitActivity.RightPane</item>
         <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
 
-    <style name="Theme.SplitActivity.Light" parent="Theme.Sherlock.Light">
+    <style name="Theme.SplitActivity.Light" parent="@style/Theme.AppCompat.Light">
         <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
         <item name="leftPaneStyle">@style/Widget.SplitActivity.LeftPane</item>
         <item name="rightPaneStyle">@style/Widget.SplitActivity.RightPane</item>
         <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
 
-    <style name="Theme.SplitActivity.Light.DarkActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.SplitActivity.Light.DarkActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
         <item name="leftPaneStyle">@style/Widget.SplitActivity.LeftPane</item>
         <item name="rightPaneStyle">@style/Widget.SplitActivity.RightPane</item>
         <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
 
-    <style name="Theme.SplitActivity.Light.NoActionBar" parent="Theme.Sherlock.Light.NoActionBar">
+    <!-- No .NoActionBar theme in AppCompat?
+    <style name="Theme.SplitActivity.Light.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
         <item name="leftPaneStyle">@style/Widget.SplitActivity.LeftPane</item>
         <item name="rightPaneStyle">@style/Widget.SplitActivity.RightPane</item>
         <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
 
-    <style name="Theme.SplitActivity.NoActionBar" parent="Theme.Sherlock.NoActionBar">
+    <style name="Theme.SplitActivity.NoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="containerStyle">@style/Widget.SplitActivity.Container</item>
         <item name="leftPaneStyle">@style/Widget.SplitActivity.LeftPane</item>
         <item name="rightPaneStyle">@style/Widget.SplitActivity.RightPane</item>
         <item name="separatorStyle">@style/Widget.SplitActivity.Separator</item>
     </style>
+    -->
 
 </resources>
