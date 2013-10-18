@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockListFragment;
+import android.support.v4.app.ListFragment;
 import net.bicou.splitactivity.SplitActivity;
 
-public class MainListFragment extends SherlockListFragment {
+public class MainListFragment extends ListFragment {
 	ListAdapter mAdapter;
 	SplitActivity<Fragment, Fragment> mSplitActivity;
 
