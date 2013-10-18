@@ -1,0 +1,2 @@
+include ':Samples'
+include ':SplitActivity'
