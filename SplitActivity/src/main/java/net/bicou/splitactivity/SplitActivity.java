@@ -61,9 +61,17 @@ public abstract class SplitActivity<MainFragment extends Fragment, ContentFragme
 		return new Bundle();
 	}
 
+	/**
+	 * Called after {@code super.onCreate()} but before {@code setContentView()}. Useful to place calls that need the activity to be created (after
+	 * {@code super.onCreate()} but before the view tree has been inflated.
+	 */
+	protected void onPreCreate() {
+	}
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		onPreCreate();
 		setContentView(R.layout.sa__activity_split_screen);
 		L("onCreate: " + savedInstanceState);
 
